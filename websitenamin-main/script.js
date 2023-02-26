@@ -4,7 +4,7 @@
 const nav = document.querySelector(".nav");
 const navBorder = nav.querySelector(".nav__border");
 const navButton = nav.querySelector(".nav__button");
-const navButtons = nav.querySelectorAll(".nav__link");
+const navButtons = nav.querySelectorAll(".nav__buttons");
 const collapsedClass = "nav--collapsed";
 const navActive = "nav--active";
 const lsKey = "navCollapsed";
@@ -19,32 +19,30 @@ let galStatus;
 // Home
 const home = document.querySelector(".page-container");
 const navHome = document.querySelector(".nav__home");
-const homeHeight = home.getBoundingClientRect().height;
 
 // Members
-const members = document.querySelector(".our-members-container");
+const members = document.querySelector("#id-members");
 const navMembers = document.querySelector(".nav__members");
-const membersHeight = members.getBoundingClientRect().height;
 
 // Gallery
 const gallery = document.querySelector(".gallery-container");
 const navGallery = document.querySelector(".nav__gallery");
-const galleryHeight = gallery.getBoundingClientRect().height;
 
 const homeObs = function (entries, homeObserver) {
-  const [entry] = entries;
-  //   console.log(entry);
-  if (entry.isIntersecting) {
-    navHome.classList.add("active");
-    navGallery.classList.remove("active");
-    navMembers.classList.remove("active");
-  } else navHome.classList.remove("active");
+  entries.forEach((entry) => {
+    // console.log(entry);
+    if (entry.isIntersecting) {
+      navHome.classList.add("active");
+      navGallery.classList.remove("active");
+      navMembers.classList.remove("active");
+    }
+  });
 };
 
 const homeObserver = new IntersectionObserver(homeObs, {
   root: null,
-  //   rootMargin: `-${homeHeight}px`,
-  threshold: 0.4,
+  // threshold: 0.5,
+  threshold: [0.5, 1],
 });
 
 homeObserver.observe(home);
@@ -52,65 +50,45 @@ homeObserver.observe(home);
 //MEMBERS OBSERVER
 
 const memObs = function (entries, memObserver) {
-  const [entry] = entries;
-
-  if (entry.isIntersecting) {
-    navMembers.classList.add("active");
-
-    navGallery.classList.remove("active");
-    navHome.classList.remove("active");
-  } else navMembers.classList.remove("active");
+  entries.forEach((entry) => {
+    // console.log(entry);
+    if (entry.isIntersecting) {
+      navMembers.classList.add("active");
+      navHome.classList.remove("active");
+      navGallery.classList.remove("active");
+    }
+  });
 };
 
 const memObserver = new IntersectionObserver(memObs, {
   root: null,
-  //   rootMargin: `-${homeHeight}px`,
-  threshold: 0.1,
+  // threshold: 0.1,
+  threshold: [0.08, 0.1],
 });
 
 memObserver.observe(members);
 
 // GALLERY OBSERVER
 const galObs = function (entries, galObserver) {
-  const [entry] = entries;
-  console.log(entry);
-  if (entry.isIntersecting) {
-    navGallery.classList.add("active");
-    navHome.classList.remove("active");
-    navMembers.classList.remove("active");
-  } else navGallery.classList.remove("active");
+  entries.forEach((entry) => {
+    // console.log(entry);
+    if (entry.isIntersecting) {
+      navGallery.classList.add("active");
+      navHome.classList.remove("active");
+      navMembers.classList.remove("active");
+    }
+  });
+
+  //
+  // } else navGallery.classList.remove("active");
 };
 
 const galObserver = new IntersectionObserver(galObs, {
   root: null,
-  //   rootMargin: `-${homeHeight}px`,
-  threshold: 0.4,
+  threshold: [0.5, 1],
 });
 
 galObserver.observe(gallery);
-
-// di ko mapagana hahhahahahhaahhaa
-// blurs other nav buttons when selecting one
-const handleHover = function (e) {
-  if (e.target.classList.contains("nav__link")) {
-    const link = e.target;
-    const siblings = nav.querySelectorAll(".nav__link");
-    //   const logo = link.closest('.nav').querySelector('img');
-
-    siblings.forEach((el) => {
-      if (el !== link) el.style.opacity = this;
-    });
-    // logo.style.opacity = this;
-  }
-};
-
-// navButtons.forEach(function () {
-//   addEventListener("mouseover", handleHover.bind(0.5));
-// });
-
-// navButtons.forEach(function () {
-//   addEventListener("mouseout", handleHover.bind(1));
-// });
 
 // Navigation Menu
 if (localStorage.getItem(lsKey) === null) {
@@ -145,16 +123,16 @@ navButton.addEventListener("click", () => {
 });
 
 nav.addEventListener("mouseover", function (e) {
-  if (navHome.classList.contains("active")) {
-    navHome.classList.remove("active");
-    homeStatus = false;
-  } else if (navMembers.classList.contains("active")) {
-    navMembers.classList.remove("active");
-    memStatus = false;
-  } else if (navGallery.classList.contains("active")) {
-    navGallery.classList.remove("active");
-    galStatus = false;
-  }
+  // if (navHome.classList.contains("active")) {
+  //   navHome.classList.remove("active");
+  //   homeStatus = false;
+  // } else if (navMembers.classList.contains("active")) {
+  //   navMembers.classList.remove("active");
+  //   memStatus = false;
+  // } else if (navGallery.classList.contains("active")) {
+  //   navGallery.classList.remove("active");
+  //   galStatus = false;
+  // }
 
   if (
     nav.classList.contains(collapsedClass) &&
@@ -167,16 +145,16 @@ nav.addEventListener("mouseover", function (e) {
 });
 
 nav.addEventListener("mouseout", function (e) {
-  if (homeStatus === false) {
-    navHome.classList.add("active");
-    homeStatus = true;
-  } else if (memStatus === false) {
-    navMembers.classList.add("active");
-    memStatus = true;
-  } else if (galStatus === false) {
-    navGallery.classList.add("active");
-    galStatus = true;
-  }
+  // if (homeStatus === false) {
+  //   navHome.classList.add("active");
+  //   homeStatus = true;
+  // } else if (memStatus === false) {
+  //   navMembers.classList.add("active");
+  //   memStatus = true;
+  // } else if (galStatus === false) {
+  //   navGallery.classList.add("active");
+  //   galStatus = true;
+  // }
 
   if (
     !nav.classList.contains(collapsedClass) &&
@@ -258,7 +236,7 @@ const slider = function () {
   // Slide next to left
   btnLeft.addEventListener("click", prevSlide);
 
-  document.addEventListener("keydown", function (e) {
+  gallery.addEventListener("keydown", function (e) {
     if (e.key === "ArrowLeft") prevSlide();
     else if (e.key === "ArrowRight") nextSlide();
   });
@@ -272,3 +250,47 @@ const slider = function () {
   });
 };
 slider();
+
+const gallObs = function (entries, galObserver) {
+  entries.forEach((entry) => {
+    // console.log(entry);
+    if (entry.isIntersecting) {
+      if (e.key === "ArrowLeft") prevSlide();
+    }
+  });
+
+  //
+  // } else navGallery.classList.remove("active");
+};
+
+const gallObserver = new IntersectionObserver(galObs, {
+  root: null,
+  threshold: [0.5, 1],
+});
+
+gallObserver.observe(gallery);
+// di ko mapagana hahhahahahhaahhaa
+// blurs other nav buttons when selecting one
+// const handleHover = function (e) {
+//   if (e.target.classList.contains("nav__link")) {
+//     const link = e.target;
+//     const siblings = nav.querySelectorAll(".nav__link");
+//     //   const logo = link.closest('.nav').querySelector('img');
+
+//     siblings.forEach((el) => {
+//       if (el !== link) el.style.opacity = this;
+//     });
+//     // logo.style.opacity = this;
+//   }
+// };
+
+// navButtons.forEach(function () {
+//   addEventListener("mouseover", handleHover.bind(0.5));
+// });
+
+// navButtons.forEach(function () {
+//   addEventListener("mouseout", handleHover.bind(1));
+// });
+
+// navButtons.forEach((onmouseover = handleHover.bind(0.5)));
+// navButtons.forEach((onmouseout = handleHover.bind(0.5)));
